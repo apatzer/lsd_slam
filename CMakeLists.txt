@@ -15,15 +15,17 @@ find_package(Pangolin 0.1 REQUIRED)
 find_package(G2O REQUIRED)
 find_package(SuiteParse REQUIRED) # Apparently needed by g2o
 find_package(TCLAP REQUIRED )
+find_package(Glew REQUIRED )
+find_package(OpenGL REQUIRED )
 
 include( ${PROJECT_SOURCE_DIR}/cmake/G3Log.cmake )
 
 # FabMap
 # uncomment this part to enable fabmap
-#add_subdirectory(${PROJECT_SOURCE_DIR}/thirdparty/openFabMap)
-#include_directories(${PROJECT_SOURCE_DIR}/thirdparty/openFabMap/include)
-#add_definitions("-DHAVE_FABMAP")
-#set(FABMAP_LIB openFABMAP )
+add_subdirectory(${PROJECT_SOURCE_DIR}/thirdparty/openFabMap)
+include_directories(${PROJECT_SOURCE_DIR}/thirdparty/openFabMap/include)
+add_definitions("-DHAVE_FABMAP")
+set(FABMAP_LIB openFABMAP )
 
 ## Enable support for the Zed stereo camera
 option( USE_ZED_CAMERA "Use Zed Stereo camera" OFF )
@@ -78,10 +80,3 @@ add_subdirectory("lib/lsd_core")
 
 add_subdirectory("tools")
 
-option( BUILD_UNIT_TESTS "Build unit tests" ON )
-if( BUILD_UNIT_TESTS )
-  ## Build a local copy of gtest (as per the GTest FAQ)
-  include( ${CMAKE_SOURCE_DIR}/cmake/BuildGTestLibraries.cmake )
-
-  add_subdirectory( test/unit/active_object )
-endif()

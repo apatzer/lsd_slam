@@ -17,7 +17,8 @@ GUI::GUI( const lsd_slam::Configuration &conf )
    depthImgBuffer(NULL)
 {
     const int initialWidth = 800, initialHeight = 800;
-    pangolin::CreateGlutWindowAndBind("Main", initialWidth, initialHeight, GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH | GLUT_MULTISAMPLE);
+    pangolin::CreateWindowAndBind("Main", initialWidth, initialHeight);
+    //pangolin::CreateGlutWindowAndBind("Main", initialWidth, initialHeight, GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH | GLUT_MULTISAMPLE);
 
     glDisable(GL_MULTISAMPLE);
 

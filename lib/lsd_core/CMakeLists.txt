@@ -47,7 +47,10 @@ set(lsdslam_SOURCE_FILES
 add_library(lsdslam SHARED ${lsdslam_SOURCE_FILES})
 target_link_libraries(lsdslam
   ${FABMAP_LIB}
-  ${Pangolin_LIBRARIES}
+  ${Pangolin_LIBRARY}
+  ${GLEW_LIBRARY}
+  ${OPENGL_gl_LIBRARY}
+  ${OPENGL_glu_LIBRARY}
   ${Boost_LIBRARIES}
   ${OpenCV_LIBS}
   ${ZED_CAMERA_LIBRARIES}
