@@ -143,32 +143,4 @@ const cv::Mat UndistorterLogger::getOriginalK() const
 }
 
 
-#ifdef USE_ZED
-bool UndistorterLogger::calibrationFromZed( sl::zed::Camera *camera, const std::string &filename )
-{
-	std::ofstream out( filename );
-	if( !out.is_open() ) {
-		LOG(WARNING) << "Unable to write to calibration file \"" << filename << "\"";
-		return false;
-	}
-
-	sl::zed::StereoParameters *params = camera->getParameters();
-
-	const sl::zed::CamParameters &left( params->LeftCam );
-	out << left.fx << " " << left.fy << " " << left.cx << " " << left.cy << std::endl;
-
-	sl::zed::resolution res( camera->getImageSize() );
-	out << res.width << " " << res.height << std::endl;
-
-	out << res.width << " " << res.height << std::endl;
-	out << res.width << " " << res.height << std::endl;
-
-
-	return true;
-}
-
-
-#endif
-
-
 }

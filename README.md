@@ -25,28 +25,14 @@ and use CMake to turn hardware-specific elements on and off.
 
 Requires OpenCV 2.4 (with nonfree if you want FABMAP), [TCLAP](http://tclap.sourceforge.net/), Boost, Eigen, Pangolin and g2o.
 
-It includes the following third-party packages as git submodules: [g3log](https://github.com/KjellKod/g3log)
-
-It will optionally build [Google Snappy](https://github.com/google/snappy) for
-file compression.
-
-I'm developing and testing on Ubuntu 14.04.2, [NVidia Jetpack 2.0](https://developer.nvidia.com/embedded/jetpack) for Jetson TX1, and OS X 10.11 with Homebrew.
-
 # 2. Installation
 
 Install everything from apt repos if you can, otherwise there are githubs for Pangolin and g2o.
 
-## On Jetson TX1
-
-I have not tested this on a clean install, but on the Jetson, from a clean
-install of Jetpack 2.1, and with the Zed 0.93 API installed, I needed to:
-
     apt-get --yes install cmake git libeigen3-dev \
       libboost-filesystem1.55-dev libboost-thread1.55-dev \
       libboost-system1.55-dev libopencv-dev libtclap-dev \
-      libglm-dev autoconf
-
-(autoconf is needed by Google Snappy, if enabled)
+      libglm-dev
 
 You then need to manually build [Pangolin](https://github.com/stevenlovegrove/Pangolin) and [g2o](https://github.com/RainerKuemmerle/g2o) using the standard CMake build procedure.  For both I made "Release" and installed in /usr/local.   For g2o I needed to install:
 

@@ -3,10 +3,6 @@
 
 #include <g3log/g3log.hpp>            // Provides CHECK() macros
 
-#ifdef USE_ZED
-#include <zed/Camera.hpp>
-#endif
-
 #include "SophusUtil.h"
 
 #pragma once
@@ -37,17 +33,6 @@ struct Camera {
   {
     buildK();
   }
-
-#ifdef USE_ZED
-  Camera( sl::zed::StereoParameters *params )
-    : fx( params->LeftCam.fx ),
-	    fy( params->LeftCam.fy ),
-	    cx( params->LeftCam.cx ),
-	    cy( params->LeftCam.cy )
-  {
-    buildK();
-  }
-#endif
 
   Camera scale( float scale ) const
   {

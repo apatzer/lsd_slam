@@ -38,11 +38,7 @@ struct Field {
 	unsigned int compressedBytes( void ) const {
 		unsigned int bytes = nBytes();
 		if( bytes > 0 ) {
-#ifdef USE_GOOGLE_SNAPPY
-			return std::max( compressBound( bytes ), snappy::MaxCompressedLength( bytes ) );
-#else
 			return compressBound( bytes );
-#endif
 		}
 		return 0;
 	}

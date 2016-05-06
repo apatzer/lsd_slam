@@ -1,4 +1,6 @@
-
+if(APPLE)
+    set(CMAKE_MACOSX_RPATH ON)
+endif()
 
 # Set source files
 set(active_object_SOURCE_FILES

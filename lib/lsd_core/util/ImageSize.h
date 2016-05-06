@@ -3,9 +3,6 @@
 
 #include <g3log/g3log.hpp>            // Provides CHECK() macros
 
-#ifdef USE_ZED
-#include <zed/Camera.hpp>
-#endif
 
 #pragma once
 
@@ -21,13 +18,6 @@ struct ImageSize {
   ImageSize( const cv::Size &sz )
     : width(sz.width), height(sz.height)
   {;}
-
-
-#ifdef USE_ZED
-  ImageSize( const sl::zed::resolution &res )
-    : width( res.width ), height( res.height )
-  {;}
-#endif
 
   long int area( void ) const { return width*height; }
   float aspectRatio( void ) const { return float(width)/float(height); }

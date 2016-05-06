@@ -3,9 +3,6 @@
 
 #include <g3log/g3log.hpp>            // Provides CHECK() macros
 
-#ifdef USE_ZED
-#include <zed/Camera.hpp>
-#endif
 
 #include "SophusUtil.h"
 

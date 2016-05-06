@@ -1,3 +1,6 @@
+if(APPLE)
+    set(CMAKE_MACOSX_RPATH ON)
+endif()
 
 # Set source files
 set(logger_SOURCE_FILES
@@ -13,7 +16,6 @@ include_directories(
   ${OpenCV_INCLUDE_DIRS}
   ${Boost_INCLUDE_DIR}
   ${G3LOG_INCLUDE_DIR}
-  ${SNAPPY_INCLUDE_DIRS}
   ${ZLIB_INCLUDE_DIRS}
 )
 
@@ -22,8 +24,7 @@ add_library(logger SHARED ${logger_SOURCE_FILES})
 target_link_libraries(logger
   ${Boost_LIBRARIES}
   ${OpenCV_LIBS}
-  ${G3LOG_LIB}
-  ${SNAPPY_LIBRARIES}
+  ${G3LOG_LIBRARIES}
   ${ZLIB_LIBRARIES}
   active_object
 )

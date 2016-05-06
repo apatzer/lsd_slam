@@ -25,10 +25,6 @@
 
 #include "Configuration.h"
 
-#ifdef USE_ZED
-#include <zed/Camera.hpp>
-#endif
-
 
 namespace lsd_slam
 {
@@ -300,10 +296,6 @@ public:
 
 	bool isValid() const { return _valid; }
 
-#ifdef USE_ZED
-	static bool calibrationFromZed( sl::zed::Camera *camera, const std::string &filename );
-#endif
-
 protected:
 
 	UndistorterLogger( const ImageSize &inputSize, const Camera &cam  );
@@ -314,37 +306,6 @@ protected:
 	bool _valid;
 };
 
-#ifdef USE_ZED
-
-class UndistorterZED : public UndistorterLogger
-{
-public:
-	/**
-	 * Creates an Undistorter by reading the distortion parameters from a file.
-	 * for a Zed camera.  Determines cropped and final size automatically
-	 * from input resolution.
-	 */
-	UndistorterZED( sl::zed::Camera *camera );
-
-	/**
-	 * Destructor.
-	 */
-	~UndistorterZED();
-
-	UndistorterZED(const UndistorterZED&) = delete;
-	UndistorterZED& operator=(const UndistorterZED&) = delete;
-
-	// Until a Zed-optimized version is needed, devolve these to UndistortLogger
-	// void undistort(const cv::Mat &image, cv::OutputArray result) const;
-	// virtual void undistortDepth( const cv::Mat &depth, cv::OutputArray result) const;
-
-
-private:
-
-
-};
-
-#endif
 
 
 

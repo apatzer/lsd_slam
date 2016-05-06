@@ -7,6 +7,10 @@ set(RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR})
 
 cmake_minimum_required(VERSION 2.8.7)
 
+if(APPLE)
+  set(CMAKE_MACOSX_RPATH ON)
+endif()
+
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 find_package(OpenCV 2.4 COMPONENTS core highgui imgproc calib3d REQUIRED)
 find_package(Boost COMPONENTS thread filesystem system REQUIRED)
@@ -17,8 +21,7 @@ find_package(SuiteParse REQUIRED) # Apparently needed by g2o
 find_package(TCLAP REQUIRED )
 find_package(Glew REQUIRED )
 find_package(OpenGL REQUIRED )
-
-include( ${PROJECT_SOURCE_DIR}/cmake/G3Log.cmake )
+find_package(G3Log REQUIRED)
 
 # FabMap
 # uncomment this part to enable fabmap
@@ -26,13 +29,6 @@ add_subdirectory(${PROJECT_SOURCE_DIR}/thirdparty/openFabMap)
 include_directories(${PROJECT_SOURCE_DIR}/thirdparty/openFabMap/include)
 add_definitions("-DHAVE_FABMAP")
 set(FABMAP_LIB openFABMAP )
-
-## Enable support for the Zed stereo camera
-option( USE_ZED_CAMERA "Use Zed Stereo camera" OFF )
-include( ${PROJECT_SOURCE_DIR}/cmake/Zed.cmake )
-
-option( USE_GOOGLE_SNAPPY "Use Google Snappy" ON )
-include( ${PROJECT_SOURCE_DIR}/cmake/GoogleSnappy.cmake )
 
 ## Architecture detection
 EXECUTE_PROCESS( COMMAND uname -m COMMAND tr -d '\n' OUTPUT_VARIABLE ARCHITECTURE )
@@ -55,8 +51,6 @@ elseif( ${ARCHITECTURE} STREQUAL "x86_64" )
   )
 endif()
 
-
-
 set( LSDSLAM_INCLUDE_DIRS
   ${CMAKE_SOURCE_DIR}/lib
   ${CMAKE_SOURCE_DIR}/lib/lsd_core
@@ -68,11 +62,9 @@ set( LSDSLAM_INCLUDE_DIRS
   ${G2O_INCLUDE_DIR}
   ${CSPARSE_INCLUDE_DIR} #Has been set by SuiteParse
   ${CHOLMOD_INCLUDE_DIR} #Has been set by SuiteParse
-  ${ZED_CAMERA_INCLUDE_DIRS}
   ${G3LOG_INCLUDE_DIR}
 )
 include_directories( ${LSDSLAM_INCLUDE_DIRS} )
-
 
 add_subdirectory("lib/active_object")
 add_subdirectory("lib/logger")

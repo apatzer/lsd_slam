@@ -1,13 +1,12 @@
 
+if(APPLE)
+  set(CMAKE_MACOSX_RPATH ON)
+endif()
+
 set(GUI_SRCS
   ${CMAKE_CURRENT_SOURCE_DIR}/IOWrapper/OpenCV/ImageDisplay_OpenCV.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/IOWrapper/Pangolin/PangolinOutput3DWrapper.cpp
 )
-
-if( USE_ZED_CAMERA )
-  set( ZED_SRCS
-      ${CMAKE_CURRENT_SOURCE_DIR}/util/Undistorter/UndistorterZED.cpp )
-endif()
 
 # Set source files
 set(lsdslam_SOURCE_FILES

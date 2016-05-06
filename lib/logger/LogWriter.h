@@ -27,12 +27,7 @@ class LogWriter
     public:
 
       static const int SnappyCompressLevel = 100;
-#ifdef USE_SNAPPY
-      static const int DefaultCompressLevel = SnappyCompressLevel;
-#else
       static const int DefaultCompressLevel = Z_DEFAULT_COMPRESSION;
-#endif
-
 
         LogWriter( int compressLevel = DefaultCompressLevel );
         virtual ~LogWriter();

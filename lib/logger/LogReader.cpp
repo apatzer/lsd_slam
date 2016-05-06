@@ -11,9 +11,6 @@
 
 #include "LogReader.h"
 
-#ifdef USE_SNAPPY
-#include <snappy.h>
-#endif
 #include <zlib.h>
 
 #include <boost/filesystem.hpp>
@@ -83,10 +80,6 @@ bool LogReader::open( const std::string &filename )
   fread( &_featureFlags, sizeof( int16_t), 1, fp );
   LOG(DEBUG) << "Feature flags: " << _featureFlags;
 
-#if not defined(USE_SNAPPY)
-  CHECK( (_featureFlags & SNAPPY_COMPRESSION) == 0 ) << "Log written with Snappy compressor, which isn't compiled in...";
-#endif
-
   CHECK( _featureFlags != 0 ) << "Feature flags is zero? (" << _featureFlags << ")";
 
   fread(&numFrames, sizeof(int32_t), 1, fp);
@@ -148,17 +141,6 @@ bool LogReader::grab()
     uLongf destLen = _data[i].size;
 
     std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
-#ifdef USE_SNAPPY
-    if( _featureFlags & SNAPPY_COMPRESSION) {
-      // LOG(INFO) << "IsValidCompressedBuffer: " << snappy::IsValidCompressedBuffer( (char *)_compressed[i].data.get(), _compressed[i].size );
-
-      if( !snappy::RawUncompress( (char *)_compressed[i].data.get(), _compressed[i].size, _data[i].data.get() )) {
-        LOG(WARNING) << "Error uncompressing snappy data.";
-        continue;
-      }
-    }
-    else
-#endif
     {
       if( uncompress( (Bytef *)_data[i].data.get(), &destLen, (Bytef *)_compressed[i].data.get(), _compressed[i].size ) != Z_OK) {
         LOG(WARNING) << "Error uncompressing zlib data.";

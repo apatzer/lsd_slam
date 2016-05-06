@@ -72,12 +72,6 @@ int main( int argc, char** argv )
       TCLAP::ValueArg<std::string> calibFileArg("c", "calib", "Calibration file", false, "", "Calibration filename", cmd );
       TCLAP::ValueArg<std::string> resolutionArg("r", "resolution", "", false, "hd1080", "{hd2k, hd1080, hd720, vga}", cmd );
 
-#ifdef USE_ZED
-      TCLAP::SwitchArg zedSwitch("","zed","Use ZED", cmd, false);
-      TCLAP::ValueArg<std::string> svoFileArg("","svo-input","Name of SVO file to read",false,"","SVO filename", cmd);
-      TCLAP::SwitchArg depthSwitch("","depth","Use depth data", cmd, false);
-#endif
-
       TCLAP::ValueArg<std::string> logFileArg("","log-input","Name of logger file to read",false,"","Logger filename", cmd);
 
 
@@ -88,43 +82,6 @@ int main( int argc, char** argv )
 
       cmd.parse(argc, argv );
 
-
-#ifdef USE_ZED
-      if( zedSwitch.getValue() || svoFileArg.isSet() ) {
-        if( depthSwitch.getValue() ) {
-          LOG(INFO) << "Using depth data from Stereolabs libraries";
-          conf.doDepth = Configuration::STEREO_ZED;
-        }
-
-        const sl::zed::MODE zedMode = ( conf.doDepth == Configuration::STEREO_ZED ) ? sl::zed::MODE::QUALITY : sl::zed::MODE::NONE;
-        const int whichGpu = -1;
-        const bool verboseInit = true;
-
-        sl::zed::Camera *camera = NULL;
-
-        if( svoFileArg.isSet() )
-      	{
-          LOG(INFO) << "Loading SVO file " << svoFileArg.getValue();
-          camera = new sl::zed::Camera( svoFileArg.getValue() );
-      	} else {
-          const sl::zed::ZEDResolution_mode zedResolution = parseResolution( resolutionArg.getValue() );
-          LOG(INFO) << "Using live Zed data";
-          camera = new sl::zed::Camera( zedResolution, fpsArg.getValue() );
-          conf.stopOnFailedRead = false;
-        }
-
-        sl::zed::ERRCODE err = camera->init( zedMode, whichGpu, verboseInit );
-        if (err != sl::zed::SUCCESS) {
-          LOG(WARNING) << "Unable to init the zed: " << errcode2str(err);
-          delete camera;
-          exit(-1);
-        }
-
-        dataSource = new ZedSource( camera, conf.doDepth == Configuration::STEREO_ZED );
-        if( fpsArg.isSet() && svoFileArg.isSet() ) dataSource->setFPS( fpsArg.getValue() );
-        undistorter = new UndistorterZED( camera );
-      } else
-#endif
       {
         std::vector< std::string > imageFiles = imageFilesArg.getValue();
 

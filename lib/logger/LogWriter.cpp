@@ -2,9 +2,6 @@
 
 #include "LogWriter.h"
 
-#ifdef USE_SNAPPY
-#include <snappy.h>
-#endif
 #include <zlib.h>
 
 
@@ -20,21 +17,10 @@ LogWriter::LogWriter( int level )
 		numFrames( 0 ),
 		_compressionLevel( level )
 {
-#ifdef USE_SNAPPY
-	CHECK( (_compressionLevel == SnappyCompressLevel) || (_compressionLevel == Z_DEFAULT_COMPRESSION) || (_compressionLevel >= Z_NO_COMPRESSION && _compressionLevel <= Z_BEST_COMPRESSION ) ) << "Unknown compression level " << _compressionLevel;
-
-	if( _compressionLevel == SnappyCompressLevel ) {
-		LOG(INFO) << "Using Snappy compression";
-	} else {
-		LOG(INFO) << "Using Zlib compression level " << _compressionLevel;
-	}
-
-#else
 	if( _compressionLevel == SnappyCompressLevel ) {
 			LOG(FATAL) << "Not compiled with Snappy compression";
 	}
 	CHECK( (_compressionLevel == Z_DEFAULT_COMPRESSION) || (_compressionLevel >= Z_NO_COMPRESSION && _compressionLevel <= Z_BEST_COMPRESSION) ) << "Unknown compression level " << _compressionLevel;
-#endif
 }
 
 LogWriter::~LogWriter()
@@ -197,14 +183,6 @@ void LogWriter::compressPng( unsigned int handle, std::shared_ptr<Chunk> chunk )
 		std::lock_guard< std::mutex > lock( _compressorMutex[handle] );
 
 		std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
-#ifdef USE_SNAPPY
-		if( _compressionLevel == SnappyCompressLevel ) {
-			size_t destSz = _compressorOutput[handle]->capacity();
-			snappy::RawCompress( chunk->data.get(), chunk->size, (char *)_compressorOutput[handle]->data.get(),  &destSz );
-			_compressorOutput[handle]->size = destSz;
-		}
-		else
-#endif
 		{
 			uLongf destSz = _compressorOutput[handle]->capacity();
 			int status = compress2( (Bytef *)_compressorOutput[handle]->data.get(), &destSz, (Bytef *)chunk->data.get(), chunk->size, _compressionLevel );
@@ -224,14 +202,6 @@ void LogWriter::compressPng( unsigned int handle, std::shared_ptr<Chunk> chunk )
 //
 // 		std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
 //
-// 		#ifdef USE_SNAPPY
-// 				if( _compressionLevel == SnappyCompressLevel ) {
-// 					size_t destSz = _compressorOutput[handle]->capacity();
-// 					snappy::RawCompress( chunk->data.get(), chunk->size, (char *)_compressorOutput[handle]->data.get(),  &destSz );
-// 					_compressorOutput[handle]->size = destSz;
-// 				}
-// 				else
-// 		#endif
 // 				{
 // 					uLongf destSz = _compressorOutput[handle]->capacity();
 // 					int status = compress2( (Bytef *)_compressorOutput[handle]->data.get(), &destSz, (Bytef *)chunk->data.get(), chunk->size, _compressionLevel );
